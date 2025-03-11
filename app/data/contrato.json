@@ -1,0 +1,64 @@
+{
+    "date": "exam date",
+    "exams": [
+        {
+            "id": "09c23a20-8303-4f99-b085-baa65bb28400(id de cada exame)",
+            "method": "luminescence(metodo de coleta do exame)",
+            "categories": [
+                {
+                    "name": "ERITROGRAMA(subcategoria caso exista, então é opcional)",
+                    "fields": [
+                        {
+                            "field": "hemacias",
+                            "label": "HEMÁCIAS(campo do exame)",
+                            "values": [
+                                {
+                                    "value": "2(valor exibido no exame)",
+                                    "unit_measure": "milhoes/mm(unidade de medida do exame)",
+                                    "value_type": "string(o tipo da unidade de medida)",
+                                    "reference": {
+                                        "min": "4(valor minimo de referencia estipulado para o campo no exame, opcional)",
+                                        "max": "5(valor maximo de referencia estipulado para o campo no exame, opcional)",
+                                        "value": "nao reagente(caso o valor de referencia não seja numerico)",
+                                        "ref_group": "male (caso existam diferentes grupos de referencia, deve-se escolher o que mais se encaixa no grupo do paciente)"
+                                    }
+                                }
+                            ],
+                            "type": "input"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "cdf50e29-773e-4006-a850-d2f3702d4104",
+            "method": "luminescence(metodo de coleta do exame)",
+            "categories": [
+                {
+                    "name": "ERITROGRAMA(subcategoria caso exista, então é opcional)",
+                    "fields": [
+                        {
+                            "field": "HEMÁCIAS(campo do exame)",
+                            "label": "HEMÁCIAS(campo do exame)",
+                            "values": [
+                                {
+                                    "value": "2(valor exibido no exame)",
+                                    "unit_measure": "milhoes/mm(unidade de medida do exame)",
+                                    "value_type": "string(o tipo da unidade de medida)",
+                                    "reference": {
+                                        "min": "4(valor minimo de referencia estipulado para o campo no exame, opcional)",
+                                        "max": "5(valor maximo de referencia estipulado para o campo no exame, opcional)",
+                                        "value": "nao reagente(caso o valor de referencia não seja numerico)",
+                                        "ref_group": "male (caso existam diferentes grupos de referencia, deve-se escolher o que mais se encaixa no grupo do paciente)"
+                                    }
+                                }
+                            ],
+                            "type": "input",
+                            "index": 0
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
