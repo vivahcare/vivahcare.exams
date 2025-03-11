@@ -30,10 +30,9 @@ def get_exam_data(file_name: str, request: ExamRequest):
     """
     Rota que recebe o nome do arquivo PDF, busca no S3, extrai o texto e processa com IA.
     """
-    print(request.json_data)
     try:
         # 1. Baixar PDF do S3
-        pdf_path = get_pdf_from_s3(f"exams/{file_name}")
+        pdf_path = get_pdf_from_s3(request.json_data, f"exams/{file_name}")
 
         # 2. Extrair texto do PDF
         extracted_text = extract_text_from_pdf(f'{pdf_path}')

@@ -24,26 +24,27 @@ def get_s3_client():
     )
 
 
-def get_pdf_from_s3(file_name: str, download_folder: str = "downloads/") -> str:
+def get_pdf_from_s3(exams_json: dict, download_folder: str = "downloads/") -> str:
     """
-    Faz o download de um arquivo PDF do S3 para uma pasta local e retorna o caminho do arquivo baixado.
+    Obtém o caminho do arquivo PDF no S3 a partir do JSON fornecido e faz o download.
 
-    :param file_name: Nome do arquivo PDF no S3 (incluindo subpastas, se houver).
+    :param exams_json: Dicionário contendo os dados do exame, incluindo "storage_path".
     :param download_folder: Pasta local onde o arquivo será salvo.
     :return: Caminho local do arquivo baixado.
     """
-    s3_client = get_s3_client()  # Criando cliente S3
+    s3_client = get_s3_client()
+    file_name = exams_json.get("storage_path")
+
+    if not file_name:
+        raise ValueError("O JSON não contém um 'storage_path' válido.")
 
     try:
-        # Construir o caminho completo da pasta de destino
         full_download_folder = os.path.join(download_folder, os.path.dirname(file_name))
-        os.makedirs(full_download_folder, exist_ok=True)  # Criar a pasta se não existir
+        os.makedirs(full_download_folder, exist_ok=True)
 
-        # Caminho local do arquivo baixado
         local_file_path = os.path.join(download_folder, file_name)
 
-        # Fazer o download do arquivo
-        bucket_name = os.getenv("AWS_BUCKET_NAME")  # Pegando o nome do bucket
+        bucket_name = os.getenv("AWS_BUCKET_NAME")
         s3_client.download_file(bucket_name, file_name, local_file_path)
 
         print(f"Arquivo {file_name} baixado com sucesso para {local_file_path}")
@@ -73,3 +74,13 @@ def list_s3_files():
         print(f"Erro ao listar arquivos do S3: {str(e)}")
         return []
 
+exams_json = {
+    "storage_path": "exams/123/456.pdf",
+    "exams": [
+        {"id": "09c23a20-8303-4f99-b085-baa65bb28400", "type": "hemacias"},
+        {"id": "cdf50e29-773e-4006-a850-d2f3702d4104", "type": "leucocitos"},
+        {"id": "cdf50e29-773e-4006-a850-d2f3702d4106", "type": "v.c.m"}
+    ]
+}
+
+print(get_pdf_from_s3(exams_json, "downloads/"))
