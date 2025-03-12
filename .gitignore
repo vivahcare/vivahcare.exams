@@ -1,0 +1,3 @@
+# Ignorar arquivos de configuração sensíveis
+app/config/.env
+app/config/config.py

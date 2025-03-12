@@ -9,8 +9,6 @@ from app.config.config import Settings
 app = FastAPI()
 
 
-
-
 class ExamRequest(BaseModel):
     json_data: dict
 
@@ -38,7 +36,7 @@ def get_exam_data(file_name: str, request: ExamRequest):
         extracted_text = extract_text_from_pdf(f'{pdf_path}')
 
         # 3. Processar o texto com IA (usando o JSON fornecido)
-        ai_response = process_text_with_ai(extracted_text)
+        ai_response = process_text_with_ai(extracted_text, request.json_data)
 
         return {"file_name": file_name, "processed_data": ai_response}
 

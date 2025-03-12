@@ -63,6 +63,7 @@ def list_s3_files():
 
     try:
         bucket_name = os.getenv("AWS_BUCKET_NAME")  # Pegando o nome do bucket
+
         response = s3_client.list_objects_v2(Bucket=bucket_name)
 
         if "Contents" in response:
@@ -74,13 +75,12 @@ def list_s3_files():
         print(f"Erro ao listar arquivos do S3: {str(e)}")
         return []
 
+
 exams_json = {
-    "storage_path": "exams/123/456.pdf",
+    "storage_path": "exams/2.pdf",
     "exams": [
         {"id": "09c23a20-8303-4f99-b085-baa65bb28400", "type": "hemacias"},
         {"id": "cdf50e29-773e-4006-a850-d2f3702d4104", "type": "leucocitos"},
         {"id": "cdf50e29-773e-4006-a850-d2f3702d4106", "type": "v.c.m"}
     ]
 }
-
-print(get_pdf_from_s3(exams_json, "downloads/"))
