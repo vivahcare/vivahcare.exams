@@ -1,5 +1,4 @@
 import re
-
 import unicodedata
 import unidecode
 from PyPDF2 import PdfReader
@@ -52,6 +51,72 @@ def encontrar_exames(texto, exames):
                 break
 
     return encontrados
+
+
+def remover_acentos(texto):
+    return ''.join(c for c in unicodedata.normalize('NFKD', texto) if not unicodedata.combining(c))
+
+
+def identificar_exames_com_unidades(texto, exames_dict, unidades_nested, exams_json):
+    """
+    Adiciona a verificação se o exame está presente em exams_json antes de procurar no texto.
+    Retorna erro se um exame presente em exams_json não for encontrado no texto.
+    """
+
+    def busca_unidade(unidades_nested, exame):
+        for grupo in unidades_nested.values():
+            grupo_normalizado = {remover_acentos(k.lower()): v for k, v in grupo.items()}
+            if exame in grupo_normalizado:
+                return grupo_normalizado[exame]
+        return ""
+
+    # Normaliza todas as entradas
+    texto_normalizado = remover_acentos(texto.lower())
+
+    exames_dict = {remover_acentos(k.lower()): [remover_acentos(v.lower()) for v in vals] for k, vals in
+                   exames_dict.items()}
+    unidades_nested = {remover_acentos(k.lower()): {remover_acentos(sub_k.lower()): sub_v for sub_k, sub_v in v.items()}
+                       for k, v in unidades_nested.items()}
+    exams_json = {"storage_path": exams_json["storage_path"],
+                  "exams": [{"id": e["id"], "type": remover_acentos(e["type"].lower())} for e in exams_json["exams"]]}
+
+    exames_permitidos = {e["type"]: e["id"] for e in exams_json["exams"]}
+    resultados = []
+    exames_nao_encontrados = []
+
+    for exame, variacoes in exames_dict.items():
+        if exame not in exames_permitidos:
+            continue  # Ignora exames que não estão na lista
+
+        # Procura o nome original no texto
+        padrao_original = r'\b' + re.escape(exame) + r'\b'
+        encontrado_original = re.search(padrao_original, texto_normalizado, re.IGNORECASE)
+
+        found_variation = ""
+        if not encontrado_original:
+            for var in variacoes:
+                padrao_var = r'\b' + re.escape(var) + r'\b'
+                if re.search(padrao_var, texto_normalizado, re.IGNORECASE):
+                    found_variation = var
+                    break
+
+        if encontrado_original or found_variation:
+            unidade = busca_unidade(unidades_nested, exame)
+            entry = {
+                "id": exames_permitidos[exame],
+                "nome_original": exame,
+                "variação": "" if encontrado_original else found_variation,
+                "unidade": unidade
+            }
+            resultados.append(entry)
+        else:
+            exames_nao_encontrados.append(exame)
+
+    # if exames_nao_encontrados:
+    #     raise ValueError(
+    #         f"Os seguintes exames estavam no JSON, mas não foram encontrados no texto: {', '.join(exames_nao_encontrados)}")
+
+    return resultados
 
 
 # def identificar_exames_com_unidades(texto, exames_dict, unidades_nested):
@@ -122,81 +187,15 @@ def encontrar_exames(texto, exames):
 #
 #     return resultados
 
-def remover_acentos(texto):
-    return ''.join(c for c in unicodedata.normalize('NFKD', texto) if not unicodedata.combining(c))
+exams_json = {
+    "storage_path": "exams/123/456.pdf",
+    "exams": [
+        {"id": "09c23a20-8303-4f99-b085-baa65bb28400", "type": "hemacias"},
+        {"id": "cdf50e29-773e-4006-a850-d2f3702d4104", "type": "leucocitos"},
+        {"id": "cdf50e29-773e-4006-a850-d2f3702d4106", "type": "v.c.m"}
+    ]
+}
 
+text = extract_text_from_pdf('downloads/exams/2.pdf')
 
-def identificar_exames_com_unidades(texto, exames_dict, unidades_nested, exams_json):
-    """
-    Adiciona a verificação se o exame está presente em exams_json antes de procurar no texto.
-    Retorna erro se um exame presente em exams_json não for encontrado no texto.
-    """
-
-    def busca_unidade(unidades_nested, exame):
-        for grupo in unidades_nested.values():
-            grupo_normalizado = {remover_acentos(k.lower()): v for k, v in grupo.items()}
-            if exame in grupo_normalizado:
-                return grupo_normalizado[exame]
-        return ""
-
-    # Normaliza todas as entradas
-    texto_normalizado = remover_acentos(texto.lower())
-
-    exames_dict = {remover_acentos(k.lower()): [remover_acentos(v.lower()) for v in vals] for k, vals in
-                   exames_dict.items()}
-    unidades_nested = {remover_acentos(k.lower()): {remover_acentos(sub_k.lower()): sub_v for sub_k, sub_v in v.items()}
-                       for k, v in unidades_nested.items()}
-    exams_json = {"storage_path": exams_json["storage_path"],
-                  "exams": [{"id": e["id"], "type": remover_acentos(e["type"].lower())} for e in exams_json["exams"]]}
-
-    exames_permitidos = {e["type"]: e["id"] for e in exams_json["exams"]}
-    resultados = []
-    exames_nao_encontrados = []
-
-    for exame, variacoes in exames_dict.items():
-        if exame not in exames_permitidos:
-            continue  # Ignora exames que não estão na lista
-
-        # Procura o nome original no texto
-        padrao_original = r'\b' + re.escape(exame) + r'\b'
-        encontrado_original = re.search(padrao_original, texto_normalizado, re.IGNORECASE)
-
-        found_variation = ""
-        if not encontrado_original:
-            for var in variacoes:
-                padrao_var = r'\b' + re.escape(var) + r'\b'
-                if re.search(padrao_var, texto_normalizado, re.IGNORECASE):
-                    found_variation = var
-                    break
-
-        if encontrado_original or found_variation:
-            unidade = busca_unidade(unidades_nested, exame)
-            entry = {
-                "id": exames_permitidos[exame],
-                "nome_original": exame,
-                "variação": "" if encontrado_original else found_variation,
-                "unidade": unidade
-            }
-            resultados.append(entry)
-        else:
-            exames_nao_encontrados.append(exame)
-
-    if exames_nao_encontrados:
-        raise ValueError(
-            f"Os seguintes exames estavam no JSON, mas não foram encontrados no texto: {', '.join(exames_nao_encontrados)}")
-
-    return resultados
-
-
-# exams_json = {
-#     "storage_path": "exams/123/456.pdf",
-#     "exams": [
-#         {"id": "09c23a20-8303-4f99-b085-baa65bb28400", "type": "hemacias"},
-#         {"id": "cdf50e29-773e-4006-a850-d2f3702d4104", "type": "leucocitos"},
-#         {"id": "cdf50e29-773e-4006-a850-d2f3702d4106", "type": "v.c.m"}
-#     ]
-# }
-#
-# text = extract_text_from_pdf('downloads/exams/Hemograma_Completo.pdf')
-#
-# exames = identificar_exames_com_unidades(text[0], exams, units, exams_json)
+exames = identificar_exames_com_unidades(text[0], exams, units, exams_json)

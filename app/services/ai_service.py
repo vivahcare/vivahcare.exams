@@ -37,7 +37,7 @@ def contract_loader():
         return json.load(file)
 
 
-def gerar_system_prompt(text):
+def gerar_system_prompt(text, json):
     """
     Retorna o prompt do sistema utilizado para extração de exames de um texto.
 
@@ -45,15 +45,36 @@ def gerar_system_prompt(text):
     """
     prompts = []
     for page in text:
-        exames = identificar_exames_com_unidades(page, exams, units)
+        exames = identificar_exames_com_unidades(page, exams, units, json)
         contrato = contract_loader()
 
         prompt = f"""
-        You are an AI specialized in extracting exam data from PDF text. Read the provided text and output a valid JSON object
-        with keys for exam details. For each exam field, ensure that the unit measures conform to the custom dictionary provided
-        below, converting it if necessary. Do not include any additional text; output only the valid JSON object.
-        Leave any missing fields empty.
-    
+        You are an AI specialized in extracting exam data from PDF text. Your task is to read the provided text and 
+        generate a structured JSON object that includes only the exams listed in the units dictionary below.
+
+        Rules for Data Extraction:
+        1. Units Dictionary Requirement:
+           - If the units dictionary is empty, do not process the text or generate any output.
+        2. Exam Filtering:
+           - Only include exams whose "nome_original" exists in the units dictionary. Ignore all other exams.
+        3. Unit Standardization:
+           - Ensure that unit measures strictly follow the "unidade" field from the units dictionary. Convert them if necessary.
+        4. Exam ID Assignment:
+           - Use the "id" from the units dictionary as the unique identifier for each exam.
+        5. Data Structure:
+           - The JSON must contain a "date" field for the exam date.
+           - Exams must be stored in the "exams" array.
+           - Each exam must contain:
+             - "id": The corresponding ID from the units dictionary.
+             - "method": The method used to perform the exam.
+             - "categories": An array of categories, with optional subcategories.
+             - "fields": The list of extracted exam fields.
+             - "values": The extracted exam values with their unit, type, and reference ranges.
+        6. Missing Data:
+           - If a required field is missing in the input, leave it empty ("") or null.
+        7. Output Restriction:
+           - The response must contain only the JSON object—no additional text, explanations, or comments.
+
         units:
         {exames}
     
@@ -66,12 +87,13 @@ def gerar_system_prompt(text):
     return prompts
 
 
-def process_text_with_ai(text):
-    prompts = gerar_system_prompt(text)
+def process_text_with_ai(text, json_data):
+    prompts = gerar_system_prompt(text, json_data)
     responses = []
     client = criar_client_openai()
 
     for prompt, page in zip(prompts, text):
+
         user_prompt = f"{page}"
 
         messages = [{"role": "system", "content": prompt},
@@ -82,6 +104,7 @@ def process_text_with_ai(text):
             messages=messages,
             response_format={'type': 'json_object'}
         )
+
         responses.append(response)
 
     # Criando um dicionário para agrupar exames por ID único
@@ -89,7 +112,7 @@ def process_text_with_ai(text):
 
     for obj in responses:
         obj = json.loads(obj.choices[0].message.content)  # Converte para JSON válido
-        key = obj.get('id')  # Usa .get() para evitar erro se 'id' não existir
+        key = obj.get('date')  # Usa .get() para evitar erro se 'id' não existir
         if not key:
             continue  # Pula se não houver ID
 
@@ -106,8 +129,13 @@ def process_text_with_ai(text):
     return result
 
 
-# text = extract_text_from_pdf('downloads/exams/Hemograma_Completo.pdf')
-#
-# print(text)
-#
-# print(process_text_with_ai(text))
+json_data = {
+    "storage_path": "exams/2.pdf",
+    "exams": [
+        {"id": "09c23a20-8303-4f99-b085-baa65bb28400", "type": "hemacias"},
+        {"id": "cdf50e29-773e-4006-a850-d2f3702d4104", "type": "leucocitos"},
+        {"id": "cdf50e29-773e-4006-a850-d2f3702d4106", "type": "v.c.m"}
+    ]
+}
+
+text = extract_text_from_pdf('downloads/exams/2.pdf')
