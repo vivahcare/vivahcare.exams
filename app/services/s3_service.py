@@ -83,4 +83,5 @@ exams_json = {
     ]
 }
 
-print(get_pdf_from_s3(exams_json, "downloads/"))
+# Exemplo de uso:
+# print(get_pdf_from_s3(exams_json, "downloads/"))
