@@ -8,7 +8,6 @@ tasks:
     cmds:
       - pip install -r requirements.txt
       - pip install uvicorn
-      - pip install pyinstaller
 
   build:
     desc: "Build the application binary"
@@ -18,7 +17,18 @@ tasks:
   start:
     desc: "Start the application"
     cmds:
-      - uvicorn app.api.routes:app --reload --port 80
+      - uvicorn app.api.routes:app --reload --port 8080
+
+  start-bg:
+    desc: "Start the application in background"
+    cmds:
+      - nohup uvicorn app.api.routes:app --port 8080 > app.log 2>&1 &
+      - echo "Server started in background. Check app.log for output"
+
+  stop:
+    desc: "Stop the background server"
+    cmds:
+      - pkill -f uvicorn || true
 
   run:
     desc: "Run the built binary"
