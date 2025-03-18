@@ -7,7 +7,7 @@
             "method": "luminescence(metodo de coleta do exame)",
             "categories": [
                 {
-                    "name": "ERITROGRAMA(subcategoria caso exista, então é opcional)",
+                    "name": "ERITROGRAMA(subcategoria caso exista)",
                     "fields": [
                         {
                             "field": "hemacias",
@@ -33,3 +33,5 @@
         }
     ]
 }
+
+

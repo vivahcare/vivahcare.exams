@@ -81,6 +81,7 @@ def identificar_exames_com_unidades(texto, exames_dict, unidades_nested, exams_j
                   "exams": [{"id": e["id"], "type": remover_acentos(e["type"].lower())} for e in exams_json["exams"]]}
 
     exames_permitidos = {e["type"]: e["id"] for e in exams_json["exams"]}
+
     resultados = []
     exames_nao_encontrados = []
 
@@ -111,10 +112,6 @@ def identificar_exames_com_unidades(texto, exames_dict, unidades_nested, exams_j
             resultados.append(entry)
         else:
             exames_nao_encontrados.append(exame)
-
-    # if exames_nao_encontrados:
-    #     raise ValueError(
-    #         f"Os seguintes exames estavam no JSON, mas não foram encontrados no texto: {', '.join(exames_nao_encontrados)}")
 
     return resultados
 
@@ -187,15 +184,21 @@ def identificar_exames_com_unidades(texto, exames_dict, unidades_nested, exams_j
 #
 #     return resultados
 
-exams_json = {
-    "storage_path": "exams/123/456.pdf",
-    "exams": [
-        {"id": "09c23a20-8303-4f99-b085-baa65bb28400", "type": "hemacias"},
-        {"id": "cdf50e29-773e-4006-a850-d2f3702d4104", "type": "leucocitos"},
-        {"id": "cdf50e29-773e-4006-a850-d2f3702d4106", "type": "v.c.m"}
-    ]
-}
+# json_data = {
+#     "storage_path": "exams/2.pdf",
+#     "exams": [
+#         {"id": "09c23a20-8303-4f99-b085-baa65bb28400", "type": "hemacias urinária"},
+#         {"id": "09c23a20-8303-4f99-b085-baa65bb28401", "type": "HEMÁCIAS"},
+#         {"id": "09c23a20-8303-4f99-b085-baa65bb28402", "type": "GLICOSE"},
+#     ]
+# }
 
-text = extract_text_from_pdf('downloads/exams/2.pdf')
-
-exames = identificar_exames_com_unidades(text[0], exams, units, exams_json)
+# text = extract_text_from_pdf('downloads/exams/2.pdf')
+#
+# exames = identificar_exames_com_unidades(text[0], exams, units, json_data)
+# exames2 = identificar_exames_com_unidades(text[1], exams, units, json_data)
+# exames3 = identificar_exames_com_unidades(text[2], exams, units, json_data)
+#
+# print(exames)
+# print(exames2)
+# print(exames3)

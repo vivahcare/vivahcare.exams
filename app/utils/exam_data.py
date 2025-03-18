@@ -87,7 +87,76 @@ exams = {
     "progesterona": ["PRG"],
     "Tiroestimulante": ["TSH"],
     "Triiodotironina": ["T3", "TT3"],
-    "Tiroxina": ["T4", "Tetraiodotironina"]
+    "Tiroxina": ["T4", "Tetraiodotironina"],
+
+    # ========================
+    # Exames de Fezes
+    # ========================
+    "Parasitológico": ["Exame Parasitológico de Fezes"],
+    "Sangue oculto": ["Pesquisa de Sangue Oculto"],
+    "Rotavírus": ["Pesquisa de Rotavírus"],
+    "Coprocultura/Cultura de Fezes": ["Cultura de Fezes", "Coprocultura"],
+
+    # ========================
+    # Exames de Urina
+    # ========================
+    "Volume": ["Volume Urinário"],
+    "Aspecto": ["Aspecto da Urina"],
+    "Cor": ["Cor da Urina"],
+    "Densidade": ["Densidade Urinária"],
+    "pH": ["pH Urinário"],
+
+    # Análise Físico-Química
+    "Proteínas": ["Proteinúria"],
+    "Glicose urinária": ["Glicosúria"],
+    "Corpos Cetônicos": ["Cetonúria"],
+    "Hemoglobina urinária": ["Hemoglobinúria"],
+    "Bilirrubina": ["Bilirrubinúria"],
+    "Urobilinogênio": ["Urobilinogenúria"],
+    "Nitrito": ["Teste de Nitrito"],
+
+    # Microscopia do Sedimento
+    "Células Epiteliais": ["Células Epiteliais na Urina"],
+    "Leucócitos urinária": ["Piúria", "Leucocitúria"],
+    "Hemácias urinária": ["Hemoglobinúria", "Hematúria"],
+    "Cristais": ["Cristalúria"],
+    "Leveduras": ["Leveduras na Urina"],
+    "Filamento de Muco": ["Muco Urinário"],
+    "Bactérias": ["Bacteriúria"],
+    "Cilindros": ["Cilindrúria"],
+    "Cetonas": ["Cetonúria"],
+
+    # ========================
+    # Exames Gerais
+    # ========================
+    "HBsAg": ["Antígeno de Superfície da Hepatite B"],
+    "Colesterol total": ["Colesterol"],
+    "Colesterol HDL": ["High-Density Lipoprotein", "Colesterol bom"],
+    "Colesterol LDL": ["Low-Density Lipoprotein", "Colesterol ruim"],
+    "Triglicerídeos": ["Triglicerídeos séricos"],
+    "Glicose": ["Glicemia", "Glicemia de Jejum"],
+    "Hepatite C - Anti HCV": ["Anticorpos contra o vírus da Hepatite C"],
+    "Anticorpos Anti-HIV": ["HIV 1 e 2", "Teste de HIV"],
+    "Tempo de protrombina (TAP)": ["Tempo de Atividade da Protrombina"],
+    "Creatinina": ["Creatina sérica"],
+    "Eletroforese de Hemoglobina": ["Frações de Hemoglobina"],
+    "Fosfatase Alcalina": ["FA"],
+    "Gama GT - Gama Glutamil Transferase": ["GGT", "Gama Glutamil Transpeptidase"],
+    "HBs Anti": ["Anticorpos contra Hepatite B"],
+    "Homocisteína": ["Homocistinúria"],
+    "Bilirrubina Total": ["BT"],
+    "Bilirrubina Direta": ["BD"],
+    "Bilirrubina Indireta": ["BI"],
+    "Tempo de Tromboplastina Parcial Ativado (TTPA)": ["TTPA", "Tempo de tromboplastina ativada"],
+    "Desidrogenase Láctica (LDH)": ["Lactato Desidrogenase", "LDH"],
+    "Proteína C Reativa (PCR)": ["PCR"],
+    "Reticulócitos": ["Contagem de Reticulócitos"],
+    "Aspartato Aminotransferase (TGO)": ["TGO", "AST"],
+    "Alanina Aminotransferase (TGP)": ["TGP", "ALT"],
+    "Transferrina": ["Siderofilina"],
+    "VDRL": ["Teste de sífilis", "Reagente para sífilis"],
+    "Ureia": ["Nitrogênio Uréico", "BUN"],
+    "Velocidade de Hemossedimentação do Sangue (VHS)": ["VHS", "Taxa de Hemossedimentação"],
 }
 
 unidades_hemograma = {

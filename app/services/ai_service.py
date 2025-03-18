@@ -49,38 +49,47 @@ def gerar_system_prompt(text, json):
         contrato = contract_loader()
 
         prompt = f"""
-        You are an AI specialized in extracting exam data from PDF text. Your task is to read the provided text and 
-        generate a structured JSON object that includes only the exams listed in the units dictionary below.
+                You are an AI specialized in extracting exam data from PDF text. Your task is to read the provided text 
+                and generate a structured JSON object that includes only the exams listed in the units dictionary below.
 
-        Rules for Data Extraction:
-        1. Units Dictionary Requirement:
-           - If the units dictionary is empty, do not process the text or generate any output.
-        2. Exam Filtering:
-           - Only include exams whose "nome_original" exists in the units dictionary. Ignore all other exams.
-        3. Unit Standardization:
-           - Ensure that unit measures strictly follow the "unidade" field from the units dictionary. Convert them if necessary.
-        4. Exam ID Assignment:
-           - Use the "id" from the units dictionary as the unique identifier for each exam.
-        5. Data Structure:
-           - The JSON must contain a "date" field for the exam date.
-           - Exams must be stored in the "exams" array.
-           - Each exam must contain:
-             - "id": The corresponding ID from the units dictionary.
-             - "method": The method used to perform the exam.
-             - "categories": An array of categories, with optional subcategories.
-             - "fields": The list of extracted exam fields.
-             - "values": The extracted exam values with their unit, type, and reference ranges.
-        6. Missing Data:
-           - If a required field is missing in the input, leave it empty ("") or null.
-        7. Output Restriction:
-           - The response must contain only the JSON object—no additional text, explanations, or comments.
+                ### Understanding the Data Structure:
 
-        units:
-        {exames}
-    
-        EXAMPLE JSON OUTPUT:
-        {contrato}
-        """
+                - exams: List with the exams in the pdf
+                - categories: List with the categories of the exams (e.g., "Eritrograma" and "Leucograma" in a blood test).
+                - fields: List with the fields in the categories.(e.g., "Eritrocitos" inside "Eritograma" )
+
+                You need to group the exams inside the lists.
+
+
+                Rules for Data Extraction:
+                1. Units Dictionary Requirement:
+                   - If the units dictionary is empty, do not process the text or generate any output.
+                2. Exam Filtering:
+                   - Only include exams whose "nome_original" exists in the units dictionary. Ignore all other exams.
+                3. Unit Standardization:
+                   - Ensure that unit measures strictly follow the "unidade" field from the units dictionary. Convert them if necessary.
+                4. Exam ID Assignment:
+                   - Use the "id" from the units dictionary as the unique identifier for each exam.
+                5. Data Structure:
+                   - The JSON must contain a "date" field for the exam date.
+                   - Exams must be stored in the "exams" array.
+                   - Each exam must contain:
+                     - "id": The corresponding ID from the units dictionary.
+                     - "method": The method used to perform the exam.
+                     - "categories": An array of categories, with optional subcategories.
+                     - "fields": The list of extracted exam fields.
+                     - "values": The extracted exam values with their unit, type, and reference ranges.
+                6. Missing Data:
+                   - If a required field is missing in the input, leave it empty ("") or null.
+                7. Output Restriction:
+                   - The response must contain only the JSON object—no additional text, explanations, or comments.
+
+                units:
+                {exames}
+
+                EXAMPLE JSON OUTPUT:
+                {contrato}
+                """
 
         prompts.append(prompt)
 
@@ -112,9 +121,9 @@ def process_text_with_ai(text, json_data):
 
     for obj in responses:
         obj = json.loads(obj.choices[0].message.content)  # Converte para JSON válido
-        key = obj.get('date')  # Usa .get() para evitar erro se 'id' não existir
+        key = obj.get('date')  # Usa .get() para evitar erro se 'date' não existir
         if not key:
-            continue  # Pula se não houver ID
+            continue  # Pula se não houver data
 
         if key not in merged_data:
             merged_data[key] = {k: v for k, v in obj.items()}
@@ -126,16 +135,17 @@ def process_text_with_ai(text, json_data):
     # Convertendo de volta para lista
     result = list(merged_data.values())
 
-    return result
+    # Retorna o JSON formatado como string
+    return json.dumps(result, indent=2)
 
-
-json_data = {
-    "storage_path": "exams/2.pdf",
-    "exams": [
-        {"id": "09c23a20-8303-4f99-b085-baa65bb28400", "type": "hemacias"},
-        {"id": "cdf50e29-773e-4006-a850-d2f3702d4104", "type": "leucocitos"},
-        {"id": "cdf50e29-773e-4006-a850-d2f3702d4106", "type": "v.c.m"}
-    ]
-}
-
-text = extract_text_from_pdf('downloads/exams/2.pdf')
+#
+# json_data = {
+#     "storage_path": "exams/2.pdf",
+#     "exams": [
+#         {"id": "09c23a20-8303-4f99-b085-baa65bb28400", "type": "hemacias urinária"},
+#         {"id": "09c23a20-8303-4f99-b085-baa65bb28401", "type": "HEMÁCIAS"},
+#         {"id": "09c23a20-8303-4f99-b085-baa65bb28402", "type": "GLICOSE"},
+#     ]
+# }
+#
+# text = extract_text_from_pdf('downloads/exams/2.pdf')
