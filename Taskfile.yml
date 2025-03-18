@@ -1,0 +1,41 @@
+version: '3'
+
+## add tasksfiles as per the project requirements
+dotenv: [.env]
+tasks:
+  install:
+    desc: "Install dependencies"
+    cmds:
+      - pip3 install -r requirements.txt
+      - pip3 install uvicorn
+
+  build:
+    desc: "Build the application binary"
+    cmds:
+      - pyinstaller --onefile --name vivahcare-exams main.py
+
+  start:
+    desc: "Start the application"
+    cmds:
+      - uvicorn app.api.routes:app --reload --port 8080
+
+  start-bg:
+    desc: "Start the application in background"
+    cmds:
+      - nohup uvicorn app.api.routes:app --port 8080 > app.log 2>&1 &
+      - echo "Server started in background. Check app.log for output"
+
+  stop:
+    desc: "Stop the background server"
+    cmds:
+      - pkill -f uvicorn || true
+
+  run:
+    desc: "Run the built binary"
+    cmds:
+      - ./dist/vivahcare-exams
+        --aws-region {{.AWS_REGION}}
+        --aws-access-key-id {{.AWS_ACCESS_KEY_ID}}
+        --aws-secret-key {{.AWS_SECRET_ACCESS_KEY}}
+        --aws-bucket {{.AWS_BUCKET_NAME}}
+        --port {{.PORT | default "80"}}
