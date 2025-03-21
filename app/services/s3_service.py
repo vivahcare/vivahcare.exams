@@ -44,7 +44,10 @@ def get_pdf_from_s3(exams_json: dict, download_folder: str = "downloads/") -> st
 
         local_file_path = os.path.join(download_folder, file_name)
 
+
         bucket_name = os.getenv("AWS_BUCKET_NAME")
+
+
         s3_client.download_file(bucket_name, file_name, local_file_path)
 
         print(f"Arquivo {file_name} baixado com sucesso para {local_file_path}")
@@ -77,10 +80,12 @@ def list_s3_files():
 
 
 exams_json = {
-    "storage_path": "exams/2.pdf",
+    "storage_path": "5e1cad38-79a6-48a4-804b-7cc2de99364a/exmae123.pdf",
     "exams": [
-        {"id": "09c23a20-8303-4f99-b085-baa65bb28400", "type": "hemacias"},
-        {"id": "cdf50e29-773e-4006-a850-d2f3702d4104", "type": "leucocitos"},
-        {"id": "cdf50e29-773e-4006-a850-d2f3702d4106", "type": "v.c.m"}
+        {
+            "id": "f8912821-670f-4cb5-813a-5ad76bbe7e45",
+            "type": "Hemograma completo"
+        }
+
     ]
 }

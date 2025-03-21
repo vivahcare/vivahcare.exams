@@ -347,3 +347,21 @@ def padronizar_exames(exams_dict):
         padronizado[exame_padronizado] = variacoes_padronizadas
     return padronizado
 
+
+exam_fields = {
+    "hemograma completo": [
+        "Hemácias", "Hemoglobina", "Hematócrito", "V.C.M", "H.C.M", "C.H.C.M", "RDW",
+        "Leucócitos", "Neutrófilos", "Segmentados", "Bastonetes", "Eosinófilos", "Basófilos",
+        "blastos", "monócitos", "linfócitos atípicos", "linfócitos típicos", "promielócitos",
+        "mielócitos", "metamielócitos", "Plaquetas", "MPV", "Plaquetas Óticas Contagem"
+    ],
+    "urina": [
+        "Volume", "Aspecto", "Cor", "Densidade", "pH", "Proteínas", "Glicose urinária",
+        "Corpos Cetônicos", "Hemoglobina urinária", "Bilirrubina", "Urobilinogênio", "Nitrito",
+        "Células Epiteliais", "Leucócitos urinária", "Hemácias urinária", "Cristais", "Leveduras",
+        "Filamento de Muco", "Bactérias", "Cilindros", "Cetonas"
+    ],
+    "fezes": [
+        "Parasitológico", "Sangue oculto", "Rotavírus", "Coprocultura/Cultura de Fezes"
+    ]
+}
