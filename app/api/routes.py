@@ -1,4 +1,7 @@
+import json
 from functools import lru_cache
+
+import requests
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from app.services.s3_service import get_pdf_from_s3
@@ -29,8 +32,8 @@ def get_exam_data(request: ExamRequest):
     Rota que recebe o nome do arquivo PDF, busca no S3, extrai o texto e processa com IA.
     """
     jsondata = request.json_data
+    url = "https://api.vivahcare.com/exams/update"
     folder = jsondata["storage_path"]
-    print(folder)
     try:
         # 1. Baixar PDF do S3
         pdf_path = get_pdf_from_s3(request.json_data, f"exams/{folder}")
@@ -40,6 +43,13 @@ def get_exam_data(request: ExamRequest):
 
         # 3. Processar o texto com IA (usando o JSON fornecido)
         ai_response = process_text_with_ai(extracted_text, request.json_data)
+
+        try:
+            json_data = json.dumps(request.json_data)
+            response = requests.post(url, data=json_data)
+
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(response))
 
         return {"file_name": folder, "processed_data": ai_response}
 

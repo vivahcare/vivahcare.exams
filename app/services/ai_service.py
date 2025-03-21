@@ -69,7 +69,8 @@ def gerar_system_prompt(text, json):
                    - Ensure that unit measures strictly follow the "unidade" field from the units dictionary. 
                    Convert them if necessary.
                 4. Exam ID Assignment:
-                   - Use the "id" from the units dictionary as the unique identifier for each exam.
+                   - Use the "id" from the units dictionary as the unique identifier for each exam and use only 
+                   one time for earch id, dont repeat it!
                 5. Exam name:
                     - If one of the exam names is present within "variacoes" in the unit dictionary, 
                 convert it to the name found in "nome_principal." Example: Cobalamina to Vitamin B12.
@@ -142,4 +143,5 @@ def process_text_with_ai(text, json_data):
 
     # Retorna o JSON formatado como string
     return json.dumps(result)
+
 
