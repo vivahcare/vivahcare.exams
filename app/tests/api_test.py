@@ -279,7 +279,7 @@ data = {
 }
 json_data = json.dumps(data)
 
-response = requests.post(url, data = data)
+response = requests.put(url, data = data)
 
 print(response.status_code)
 

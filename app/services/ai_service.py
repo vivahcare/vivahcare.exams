@@ -64,7 +64,8 @@ def gerar_system_prompt(text, json):
                 1. Units Dictionary Requirement:
                    - If the units dictionary is empty, do not process the text or generate any output.
                 2. Exam Filtering:
-                   - Only include exams whose "nome_principal" exists in the units dictionary. Ignore all other exams.
+                   - Only include exams whose "nome_principal" exists in the units dictionary. Ignore all other exams. 
+                   DO NOT REPEAT THE EXAMS!
                 3. Unit Standardization:
                    - Ensure that unit measures strictly follow the "unidade" field from the units dictionary. 
                    Convert them if necessary.
@@ -108,31 +109,40 @@ def process_text_with_ai(text, json_data):
     client = criar_client_openai()
 
     for prompt, page in zip(prompts, text):
-
         user_prompt = f"{page}"
 
         messages = [{"role": "system", "content": prompt},
                     {"role": "user", "content": user_prompt}]
 
-        response = client.chat.completions.create(
-            model="deepseek-chat",
-            messages=messages,
-            response_format={'type': 'json_object'}
-        )
+        try:
+            response = client.chat.completions.create(
+                model="deepseek-chat",
+                messages=messages,
+                response_format={'type': 'json_object'}
+            )
 
-        responses.append(response)
+            # Parse seguro do JSON
+            try:
+                parsed_content = json.loads(response.choices[0].message.content)
+                responses.append(parsed_content)
+            except json.JSONDecodeError:
+                print(f"Erro ao decodificar JSON para a página: {page}")
+                continue
+
+        except Exception as e:
+            print(f"Erro na geração de resposta: {e}")
+            continue
 
     # Criando um dicionário para agrupar exames por ID único
     merged_data = defaultdict(lambda: {'exams': []})
 
     for obj in responses:
-        obj = json.loads(obj.choices[0].message.content)  # Converte para JSON válido
         key = obj.get('date')  # Usa .get() para evitar erro se 'date' não existir
         if not key:
             continue  # Pula se não houver data
 
         if key not in merged_data:
-            merged_data[key] = {k: v for k, v in obj.items()}
+            merged_data[key] = {k: v for k, v in obj.items() if k != 'exams'}
             merged_data[key]['exams'] = []  # Garante que exams existe
 
         if 'exams' in obj:
@@ -141,7 +151,11 @@ def process_text_with_ai(text, json_data):
     # Convertendo de volta para lista
     result = list(merged_data.values())
 
-    # Retorna o JSON formatado como string
-    return json.dumps(result)
+    # Tratamento final para garantir JSON válido
+    if not result:
+        result = [{}]  # Retorna lista com dicionário vazio se não houver resultados
+
+    # Retorna o JSON formatado como string, com tratamento de caracteres especiais
+    return json.dumps(result, ensure_ascii=False, indent=2)
 
 

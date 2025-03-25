@@ -9,7 +9,7 @@ json_data = {
         {
             "id": "f8912821-670f-4cb5-813a-5ad76bbe7e45",
             "type": "Hemograma completo"
-        },
+        }
 
     ]
 }
@@ -24,5 +24,3 @@ extracted_text = extract_text_from_pdf(f'{pdf_path}')
 
 # 3. Processar o texto com IA (usando o JSON fornecido)
 ai_response = process_text_with_ai(extracted_text, json_data)
-
-print(ai_response)

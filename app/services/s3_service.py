@@ -39,18 +39,19 @@ def get_pdf_from_s3(exams_json: dict, download_folder: str = "downloads/") -> st
         raise ValueError("O JSON não contém um 'storage_path' válido.")
 
     try:
-        full_download_folder = os.path.join(download_folder, os.path.dirname(file_name))
+        # Remover a primeira pasta "vivahcare_files/"
+        file_name_without_root = '/'.join(file_name.split('/')[1:])
+
+        full_download_folder = os.path.join(download_folder, os.path.dirname(file_name_without_root))
         os.makedirs(full_download_folder, exist_ok=True)
 
-        local_file_path = os.path.join(download_folder, file_name)
-
+        local_file_path = os.path.join(download_folder, file_name_without_root)
 
         bucket_name = os.getenv("AWS_BUCKET_NAME")
 
-
         s3_client.download_file(bucket_name, file_name, local_file_path)
 
-        print(f"Arquivo {file_name} baixado com sucesso para {local_file_path}")
+        print(f"Arquivo {file_name_without_root} baixado com sucesso para {local_file_path}")
         return local_file_path
 
     except (BotoCoreError, ClientError) as e:
