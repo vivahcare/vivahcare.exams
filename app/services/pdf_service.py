@@ -91,7 +91,8 @@ def processar_exames(exams_json, exam_fields, exams, units):
             for campo in campos_exame:
                 nome_principal = campo
                 variacoes = exams.get(campo, [])
-                unidade = units.get(exame_final, {}).get(campo, "")
+
+                unidade = units.get(campo, "")
 
                 campos_formatados.append({
                     "nome_principal": nome_principal,

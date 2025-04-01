@@ -159,7 +159,7 @@ exams = {
     "Velocidade de Hemossedimentação do Sangue (VHS)": ["VHS", "Taxa de Hemossedimentação"],
 }
 
-unidades_hemograma = {
+units = {
     # Série Vermelha / Eritrograma
     "Hemácias": "milhões/mm³",
     "Hemoglobina": "g/dL",
@@ -171,29 +171,25 @@ unidades_hemograma = {
 
     # Série Branca / Leucograma
     "Leucócitos": "/mm³",
-    "Neutrófilos": "/mm³",
+    "Neutrofílos": "/mm³",
     "Segmentados": "/mm³",
     "Bastonetes": "/mm³",
     "Eosinófilos": "/mm³",
     "Basófilos": "/mm³",
-    "blastos": "/mm³",
-    "monócitos": "/mm³",
-    "linfócitos atípicos": "/mm³",
-    "linfócitos típicos": "/mm³",
-    "promielócitos": "/mm³",
-    "mielócitos": "/mm³",
-    "metamielócitos": "/mm³",
+    "Blastos": "/mm³",
+    "Monócitos": "/mm³",
+    "Linfócitos Atípicos": "/mm³",
+    "Linfócitos Típicos": "/mm³",
+    "Promielócitos": "/mm³",
+    "Mielócitos": "/mm³",
+    "Metamielócitos": "/mm³",
 
     # Série Plaquetária / Plaquetas
     "Plaquetas": "/mm³",
     "MPV": "fL",
-    "Plaquetas Óticas Contagem": "/mm³"
-}
+    "Plaquetas Óticas Contagem": "/mm³",
 
-unidades_vitaminas_minerais = {
-    # ========================
     # Vitaminas
-    # ========================
     "Vitamina B12": "pg/mL",
     "Vitamina D": "ng/mL",
     "Vitamina A": "mg/L",
@@ -205,12 +201,10 @@ unidades_vitaminas_minerais = {
     "Vitamina B5": "mg/L",
     "Vitamina B6": "mg/L",
     "Vitamina E": "mg/L",
-    "Vitamina k": "mg/L",
+    "Vitamina K": "mg/L",
     "Vitamina B9": "mg/L",
 
-    # ========================
     # Minerais
-    # ========================
     "Sódio": "mmol/L",
     "Zinco": "mg/L",
     "Ferritina": "ng/mL",
@@ -218,87 +212,16 @@ unidades_vitaminas_minerais = {
     "Magnésio": "mg/dL",
     "Cálcio": "mg/dL",
     "Potássio": "mmol/L",
-    "Fósforo": "mg/dL"
-}
+    "Fósforo": "mg/dL",
 
-unidades_teste_hormonal = {
-    # =================================
-    # Teste Hormonal
-    # =================================
-
-    # FSH (Folículo Estimulante)
-    "Folículo": "mUI/mL",
-
-    # LH (Luteinizante)
-    "Luteinizante": "mUI/mL",
-
-    # Insulina
-    "Insulina": "µUI/mL",
-
-    # Prolactina
-    "Prolactina": "ng/mL",
-
-    # Testosterona livre
-    "Testosterona livre": "pg/mL",
-
-    # Testosterona total
-    "testosterona total": "ng/dL",
-
-    # Hormônio Paratireoidiano (PTH)
-    "hormonio paratireoidiano": "pg/mL",
-
-    # Antígeno Prostático Específico (PSA)
-    "antígeno prostático específico": "ng/mL",
-
-    # Dehidroepiandrosterona (DHEA)
-    "dehidroepiandrosterona": "µg/dL",
-
-    # Hormônio do Crescimento (GH)
-    "hormonio do crescimento": "ng/mL",
-
-    # Cortisol
-    "cortisol": "µg/dL",
-
-    # Estrona (E1)
-    "estrona": "pg/mL",
-
-    # Estradiol (E2)
-    "estradiol": "pg/mL",
-
-    # Estriol (E3)
-    "estriol": "ng/mL",
-
-    # Progesterona
-    "progesterona": "ng/mL",
-
-    # Tiroestimulante (TSH)
-    "Tiroestimulante": "µUI/mL",
-
-    # Triiodotironina (T3)
-    "Triiodotironina": "ng/dL",
-
-    # Tiroxina (T4)
-    "Tiroxina": "µg/dL"
-}
-
-unidades_fezes_urina = {
-    "Volume": "mL",
-    "Densidade": "g/L",
-}
-
-unidades_exames_gerais = {
-    # =================================
     # Perfil Lipídico
-    # =================================
     "Colesterol Total": "mg/dL",
     "Colesterol HDL": "mg/dL",
     "Colesterol LDL": "mg/dL",
     "Colesterol VLDL": "mg/dL",
     "Triglicerídeos": "mg/dL",
 
-    # =================================
     # Metabolismo e Outros
-    # =================================
     "Glicose": "mg/dL",
     "Creatinina": "mg/dL",
     "Ureia": "mg/dL",
@@ -306,9 +229,7 @@ unidades_exames_gerais = {
     "Cálcio Ionizado": "mg/dL",
     "Hemoglobina Glicada (HbA1c)": "%",
 
-    # =================================
     # Enzimas / Marcadores
-    # =================================
     "TGO": "U/L",  # AST
     "TGP": "U/L",  # ALT
     "Gama GT": "U/L",
@@ -316,26 +237,38 @@ unidades_exames_gerais = {
     "Amilase": "U/L",
     "Lipase": "U/L",
 
-    # =================================
     # Inflamação e Autoimunes
-    # =================================
     "Proteína C Reativa (PCR)": "mg/L",
     "PCR Ultra-Sensível": "mg/L",
     "Fator Reumatoide": "UI/mL",
     "Velocidade de Hemossedimentação": "mm/h",
 
-    # =================================
     # Outros
-    # =================================
-    "Beta-hCG": "mUI/mL"
-}
+    "Beta-hCG": "mUI/mL",
 
-units = {
-    "hemograma": unidades_hemograma,
-    "vitaminas_minerais": unidades_vitaminas_minerais,
-    "teste_hormonal": unidades_teste_hormonal,
-    "fezes_urina": unidades_fezes_urina,
-    "exames_gerais": unidades_exames_gerais
+    # Fezes
+    "Volume": "mL",
+    "Densidade": "g/L",
+
+    # Teste Hormonal
+    "Folículo": "mUI/mL",
+    "Luteinizante": "mUI/mL",
+    "Insulina": "µUI/mL",
+    "Prolactina": "ng/mL",
+    "Testosterona Livre": "pg/mL",
+    "Testosterona Total": "ng/dL",
+    "Hormônio Paratireoidiano": "pg/mL",
+    "Antígeno Prostático Específico": "ng/mL",
+    "Dehidroepiandrosterona": "µg/dL",
+    "Hormônio do Crescimento": "ng/mL",
+    "Cortisol": "µg/dL",
+    "Estrona": "pg/mL",
+    "Estradiol": "pg/mL",
+    "Estriol": "ng/mL",
+    "Progesterona": "ng/mL",
+    "Tiroestimulante": "µUI/mL",
+    "Triiodotironina": "ng/dL",
+    "Tiroxina": "µg/dL"
 }
 
 

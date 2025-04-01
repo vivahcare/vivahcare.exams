@@ -45,6 +45,8 @@ def gerar_system_prompt(text, json):
     """
     prompts = []
     exames = processar_exames(json, exam_fields, exams, units)
+
+    print(exames)
     for page in text:
         contrato = contract_loader()
         prompt = f"""
@@ -68,10 +70,12 @@ def gerar_system_prompt(text, json):
                    DO NOT REPEAT THE EXAMS!
                 3. Unit Standardization:
                    - Ensure that unit measures strictly follow the "unidade" field from the units dictionary. 
-                   Convert them if necessary.
+                   Example.: If in the unit dictionary is "milhões/cm3" but in the text is "milhões/mm3" you will need to 
+                   convert the unit to "milhões/cm3", with the respective changes in the value(4,94 milhões/mm3 to 
+                   4.940 milhões/cm3).
                 4. Exam ID Assignment:
                    - Use the "id" from the units dictionary as the unique identifier for each exam and use only 
-                   one time for earch id, dont repeat it!
+                   one time for each id, dont repeat it!
                 5. Exam name:
                     - If one of the exam names is present within "variacoes" in the unit dictionary, 
                 convert it to the name found in "nome_principal." Example: Cobalamina to Vitamin B12.
@@ -86,6 +90,7 @@ def gerar_system_prompt(text, json):
                      - "categories": An array of categories, with optional subcategories.
                      - "fields": The list of extracted exam fields.
                      - "values": The extracted exam values with their unit, type, and reference ranges.
+                     - "value_type": The type of the data in the value field. Can be string, int or float. 
                 8. Missing Data:
                    - If a required field is missing in the input, leave it empty ("") or null.
                 9. Output Restriction:
@@ -103,7 +108,7 @@ def gerar_system_prompt(text, json):
     return prompts
 
 
-def process_text_with_ai(text, json_data):
+def process_text_with_ai(text, json_data, indent = 0):
     prompts = gerar_system_prompt(text, json_data)
     responses = []
     client = criar_client_openai()
@@ -125,6 +130,7 @@ def process_text_with_ai(text, json_data):
             try:
                 parsed_content = json.loads(response.choices[0].message.content)
                 responses.append(parsed_content)
+                print(response)
             except json.JSONDecodeError:
                 print(f"Erro ao decodificar JSON para a página: {page}")
                 continue
@@ -156,6 +162,6 @@ def process_text_with_ai(text, json_data):
         result = [{}]  # Retorna lista com dicionário vazio se não houver resultados
 
     # Retorna o JSON formatado como string, com tratamento de caracteres especiais
-    return json.dumps(result, ensure_ascii=False, indent=2)
+    return json.dumps(result, ensure_ascii=False, indent=indent)
 
 

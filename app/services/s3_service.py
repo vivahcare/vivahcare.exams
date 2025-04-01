@@ -71,6 +71,7 @@ def list_s3_files():
         response = s3_client.list_objects_v2(Bucket=bucket_name)
 
         if "Contents" in response:
+            print([obj["Key"] for obj in response["Contents"]])
             return [obj["Key"] for obj in response["Contents"]]
         else:
             return []
@@ -78,15 +79,3 @@ def list_s3_files():
     except (BotoCoreError, ClientError) as e:
         print(f"Erro ao listar arquivos do S3: {str(e)}")
         return []
-
-
-exams_json = {
-    "storage_path": "5e1cad38-79a6-48a4-804b-7cc2de99364a/exmae123.pdf",
-    "exams": [
-        {
-            "id": "f8912821-670f-4cb5-813a-5ad76bbe7e45",
-            "type": "Hemograma completo"
-        }
-
-    ]
-}
