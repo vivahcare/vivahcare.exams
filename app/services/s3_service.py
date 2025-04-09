@@ -49,7 +49,7 @@ def get_pdf_from_s3(exams_json: dict, download_folder: str = "downloads/") -> st
 
         bucket_name = os.getenv("AWS_BUCKET_NAME")
 
-        s3_client.download_file(bucket_name, file_name, local_file_path)
+        s3_client.download_file(bucket_name, file_name_without_root, local_file_path)
 
         print(f"Arquivo {file_name_without_root} baixado com sucesso para {local_file_path}")
         return local_file_path
@@ -71,7 +71,6 @@ def list_s3_files():
         response = s3_client.list_objects_v2(Bucket=bucket_name)
 
         if "Contents" in response:
-            print([obj["Key"] for obj in response["Contents"]])
             return [obj["Key"] for obj in response["Contents"]]
         else:
             return []

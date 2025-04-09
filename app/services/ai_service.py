@@ -46,7 +46,6 @@ def gerar_system_prompt(text, json):
     prompts = []
     exames = processar_exames(json, exam_fields, exams, units)
 
-    print(exames)
     for page in text:
         contrato = contract_loader()
         prompt = f"""
@@ -130,7 +129,6 @@ def process_text_with_ai(text, json_data, indent = 0):
             try:
                 parsed_content = json.loads(response.choices[0].message.content)
                 responses.append(parsed_content)
-                print(response)
             except json.JSONDecodeError:
                 print(f"Erro ao decodificar JSON para a página: {page}")
                 continue
